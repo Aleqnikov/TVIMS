@@ -4,6 +4,9 @@ from scipy import stats
 from scipy.stats import kstwobign
 from scipy.optimize import minimize
 
+# Отключаем экспоненциальный вид для массивов NumPy
+np.set_printoptions(suppress=True, precision=20)
+
 arr = np.array([
     8.65, 4.55, 4.42, 4.76, 8.03, 5.67, 4.97, 4.42, -4.43, 9.87,
     1.84, 8.64, 8.05, -2.52, 10.74, 12.11, 8.14, 4.36, 0.60, 0.91,
@@ -26,10 +29,10 @@ xs = np.sort(arr)
 print("=" * 65)
 print("a) ВАРИАЦИОННЫЙ РЯД")
 print("=" * 65)
-print(f"{'i':<6} {'x_(i)':<12} {'(i-1)/n':<12} {'i/n':<12}")
-print("-" * 42)
+print(f"{'i':<6} {'x_(i)':<25} {'(i-1)/n':<25} {'i/n':<25}")
+print("-" * 85)
 for i, x in enumerate(xs):
-    print(f"{i + 1:<6} {x:<12.4f} {i / n:<12.4f} {(i + 1) / n:<12.4f}")
+    print(f"{i + 1:<6} {x:<25} {i / n:<25} {(i + 1) / n:<25}")
 print(f"\nN = {n}")
 
 # ── b) Числовые характеристики ────────────────────────────────────
@@ -37,7 +40,6 @@ m = np.mean(arr)
 s2 = np.mean((arr - m) ** 2)
 s = np.sqrt(s2)
 
-# Твой оригинальный расчет медианы
 if n % 2 == 0:
     med = xs[n // 2 - 1]
 else:
@@ -50,12 +52,12 @@ prb = np.mean((arr >= c) & (arr <= d))
 print("\n" + "=" * 55)
 print("b) ЧИСЛОВЫЕ ХАРАКТЕРИСТИКИ")
 print("=" * 55)
-print(f"(i)   Математическое ожидание : {m:.4f}")
-print(f"(ii)  Дисперсия               : {s2:.4f}")
-print(f"(iii) Медиана                 : {med:.4f}")
-print(f"(iv)  Асимметрия              : {asi:.4f}")
-print(f"(v)   Эксцесс                 : {exc:.4f}")
-print(f"(vi)  P(X ∈ [{c}, {d}])       : {prb:.4f}")
+print(f"(i)   Математическое ожидание : {m}")
+print(f"(ii)  Дисперсия               : {s2}")
+print(f"(iii) Медиана                 : {med}")
+print(f"(iv)  Асимметрия              : {asi}")
+print(f"(v)   Эксцесс                 : {exc}")
+print(f"(vi)  P(X ∈ [{c}, {d}])       : {prb}")
 
 # ── c) ОМП и ММ для нормального распределения ─────────────────────
 a_mle = m
@@ -66,8 +68,8 @@ bias_s2 = -s2 / n
 print("\n" + "=" * 55)
 print("c) ОМП И ММ ДЛЯ НОРМАЛЬНОГО РАСПРЕДЕЛЕНИЯ")
 print("=" * 55)
-print(f"   ОМП/ММ: a_mle  = x̄  = {a_mle:.4f},  смещение = {bias_a}")
-print(f"   ОМП/ММ: s²_mle = s² = {s2_mle:.4f},  смещение ≈ {bias_s2:.4f}")
+print(f"   ОМП/ММ: a_mle  = x̄  = {a_mle},  смещение = {bias_a}")
+print(f"   ОМП/ММ: s²_mle = s² = {s2_mle},  смещение ≈ {bias_s2}")
 
 # ── d) Доверительные интервалы ────────────────────────────────────
 s2_unb = np.var(arr, ddof=1)
@@ -83,12 +85,12 @@ ci_s2_hi = (n - 1) * s2_unb / x2lo
 print("\n" + "=" * 55)
 print(f"d) ДОВЕРИТЕЛЬНЫЕ ИНТЕРВАЛЫ  (α = {al})")
 print("=" * 55)
-print(f"   t_{{α/2, n-1}} = {t_crit:.4f}")
-print(f"   χ²_{{α/2}}     = {x2lo:.4f},  χ²_{{1-α/2}} = {x2hi:.4f}")
-print(f"\n   {'Par':<8} {'Lw':>12} {'Up':>12}")
-print(f"   {'-' * 34}")
-print(f"   {'Mean':<8} {ci_a_lo:>12.4f} {ci_a_hi:>12.4f}")
-print(f"   {'Var':<8} {ci_s2_lo:>12.4f} {ci_s2_hi:>12.4f}")
+print(f"   t_{{α/2, n-1}} = {t_crit}")
+print(f"   χ²_{{α/2}}     = {x2lo},  χ²_{{1-α/2}} = {x2hi}")
+print(f"\n   {'Par':<8} {'Lw':>25} {'Up':>25}")
+print(f"   {'-' * 60}")
+print(f"   {'Mean':<8} {ci_a_lo:>25} {ci_a_hi:>25}")
+print(f"   {'Var':<8} {ci_s2_lo:>25} {ci_s2_hi:>25}")
 
 # ── e) Критерий Колмогорова ───────────────────────────────────────
 ks_L = np.arange(0, n) / n
@@ -103,28 +105,27 @@ j_ks = np.argmax(ks_mx)
 D = ks_mx[j_ks]
 D_n = D * np.sqrt(n)
 ks_crit = kstwobign.ppf(1 - al)
-ks_pval = kstwobign.sf(D_n)  # Соответствует ks.test() из R кода препода
+ks_pval = kstwobign.sf(D_n)
 
-print("\n" + "=" * 90)
+print("\n" + "=" * 170)
 print(f"e) ТАБЛИЦА КОЛМОГОРОВА  H0: N(a0={a0}, σ0={sig0})")
-print("=" * 90)
-print(f"{'i':>3} | {'x_i':>8} | {'(i-1)/n':>8} | {'i/n':>8} | {'F0(x_i)':>8} | {'|3-5|':>8} | {'|4-5|':>8} | {'max':>8}")
-print("-" * 90)
+print("=" * 170)
+print(f"{'i':>3} | {'x_i':>8} | {'(i-1)/n':>20} | {'i/n':>20} | {'F0(x_i)':>20} | {'|3-5|':>20} | {'|4-5|':>20} | {'max':>20}")
+print("-" * 170)
 
 for i in range(n):
     mark = "<-- MAX" if i == j_ks else ""
-    print(f"{i+1:3} | {xs[i]:8.4f} | {ks_L[i]:8.4f} | {ks_R[i]:8.4f} | "
-          f"{ks_F0[i]:8.4f} | {ks_c6[i]:8.4f} | {ks_c7[i]:8.4f} | {ks_mx[i]:8.4f} {mark}")
+    print(f"{i+1:3} | {xs[i]:8} | {ks_L[i]:20} | {ks_R[i]:20} | "
+          f"{ks_F0[i]:20} | {ks_c6[i]:20} | {ks_c7[i]:20} | {ks_mx[i]:20} {mark}")
 
-print("-" * 90)
-print(f"   D = {D:.4f},  D*sqrt(n) = {D_n:.4f}")
-print(f"   Критическое значение: {ks_crit:.4f}")
-print(f"   p-value (наибольший уровень значимости): {ks_pval:.4e}")
+print("-" * 170)
+print(f"   D = {D},  D*sqrt(n) = {D_n}")
+print(f"   Критическое значение: {ks_crit}")
+print(f"   p-value (наибольший уровень значимости): {ks_pval}")
 print(f"   Итог: {'Отвергаем H0' if D_n > ks_crit else 'Нет оснований отвергнуть H0'}")
 
 
 # ── СЕТКА ИНТЕРВАЛОВ И ЧАСТОТ ИЗ ГИСТОГРАММЫ (Пункты f и g) ───────
-# Проектируем 5 объединенных интервалов на базе шага h=2
 chi2_edges = [-np.inf, 0.0, 2.0, 4.0, 6.0, np.inf]
 nu_observed = np.array([6, 9, 9, 11, 15], dtype=float)
 
@@ -143,25 +144,24 @@ df_f = k - 1
 xa1_f = stats.chi2.ppf(1 - al, df_f)
 pval_f = stats.chi2.sf(X2_f, df_f)
 
-print(f"\n{'=' * 76}\n  f) χ²  простая гипотеза H0: N(a0={a0}, σ0={sig0})\n{'=' * 76}")
-print(f"{'i':>4} {'lw':>8} {'up':>8} {'nu_i':>8} {'np_i':>8} {'(nu-np)^2/np':>14} {'np>=5':>6}")
-print("-" * 76)
+print(f"\n{'=' * 110}\n  f) χ²  простая гипотеза H0: N(a0={a0}, σ0={sig0})\n{'=' * 110}")
+print(f"{'i':>4} {'lw':>8} {'up':>8} {'nu_i':>8} {'np_i':>25} {'(nu-np)^2/np':>25} {'np>=5':>6}")
+print("-" * 110)
 for i in range(k):
-    lw_s = f"{chi2_edges[i]:.2f}" if not np.isinf(chi2_edges[i]) else "-∞"
-    up_s = f"{chi2_edges[i+1]:.2f}" if not np.isinf(chi2_edges[i+1]) else "+∞"
+    lw_s = f"{chi2_edges[i]}" if not np.isinf(chi2_edges[i]) else "-∞"
+    up_s = f"{chi2_edges[i+1]}" if not np.isinf(chi2_edges[i+1]) else "+∞"
     ok = "✓" if npr_f[i] >= 4.99 else "✗"
-    print(f"{i + 1:>4} {lw_s:>8} {up_s:>8} {nu_observed[i]:>8.0f} {npr_f[i]:>8.3f} {res2_f[i]:>14.4f} {ok:>6}")
-print("-" * 76)
-print(f"{'Итого':>22} {n:>8.0f} {np.sum(npr_f):>8.3f} {X2_f:>14.4f}")
+    print(f"{i + 1:>4} {lw_s:>8} {up_s:>8} {nu_observed[i]:>8.0f} {npr_f[i]:>25} {res2_f[i]:>25} {ok:>6}")
+print("-" * 110)
+print(f"{'Итого':>22} {n:>8.0f} {np.sum(npr_f):>25} {X2_f:>25}")
 print(f"\n   k = {k},  df = {df_f}")
-print(f"   X² = {X2_f:.4f}")
-print(f"   χ²_кр (α={al}, df={df_f}) = {xa1_f:.4f}")
+print(f"   X² = {X2_f}")
+print(f"   χ²_кр (α={al}, df={df_f}) = {xa1_f}")
 print(f"   X² > χ²_кр : {X2_f > xa1_f}  →  {'Отвергаем H0' if X2_f > xa1_f else 'Нет оснований отвергнуть H0'}")
-print(f"   p-value = {pval_f:.4e}")
+print(f"   p-value = {pval_f}")
 
 
 # ── g) Сложная гипотеза χ²: Поиск параметров через минимум Хи-Квадрат ──
-# Реализация nlm() оптимизации из R-кода препода (блок #7)
 def csq_target(params):
     a_opt, sig_opt = params
     if sig_opt <= 0:
@@ -171,34 +171,32 @@ def csq_target(params):
     safe_npr = np.where(npr > 1e-10, npr, 1e-10)
     return np.sum((nu_observed - safe_npr)**2 / safe_npr)
 
-# Начальное приближение берем из точечных оценок (m, s)
 opt_res = minimize(csq_target, [m, np.sqrt(s2)], method='Nelder-Mead')
 a_opt, sig_opt = opt_res.x
 X2_g = opt_res.fun
 
-# Расчет финальных теоретических частот для таблицы g
 p_g = stats.norm.cdf(chi2_edges[1:], loc=a_opt, scale=sig_opt) - stats.norm.cdf(chi2_edges[:-1], loc=a_opt, scale=sig_opt)
 npr_g = p_g * n
 res2_g = ((nu_observed - npr_g) ** 2) / npr_g
-df_g = k - 1 - 2  # Оценивали 2 параметра через оптимизатор Хи-Квадрат, df уменьшается на 2
+df_g = k - 1 - 2
 xa1_g = stats.chi2.ppf(1 - al, df_g)
 pval_g = stats.chi2.sf(X2_g, df_g)
 
-print(f"\n{'=' * 76}\n  g) χ²  сложная гипотеза H0: N(a_opt={a_opt:.4f}, σ_opt={sig_opt:.4f})\n{'=' * 76}")
-print(f"{'i':>4} {'lw':>8} {'up':>8} {'nu_i':>8} {'np_i':>8} {'(nu-np)^2/np':>14} {'np>=5':>6}")
-print("-" * 76)
+print(f"\n{'=' * 110}\n  g) χ²  сложная гипотеза H0: N(a_opt={a_opt}, σ_opt={sig_opt})\n{'=' * 110}")
+print(f"{'i':>4} {'lw':>8} {'up':>8} {'nu_i':>8} {'np_i':>25} {'(nu-np)^2/np':>25} {'np>=5':>6}")
+print("-" * 110)
 for i in range(k):
-    lw_s = f"{chi2_edges[i]:.2f}" if not np.isinf(chi2_edges[i]) else "-∞"
-    up_s = f"{chi2_edges[i+1]:.2f}" if not np.isinf(chi2_edges[i+1]) else "+∞"
+    lw_s = f"{chi2_edges[i]}" if not np.isinf(chi2_edges[i]) else "-∞"
+    up_s = f"{chi2_edges[i+1]}" if not np.isinf(chi2_edges[i+1]) else "+∞"
     ok = "✓" if npr_g[i] >= 4.99 else "✗"
-    print(f"{i + 1:>4} {lw_s:>8} {up_s:>8} {nu_observed[i]:>8.0f} {npr_g[i]:>8.3f} {res2_g[i]:>14.4f} {ok:>6}")
-print("-" * 76)
-print(f"{'Итого':>22} {n:>8.0f} {np.sum(npr_g):>8.3f} {X2_g:>14.4f}")
+    print(f"{i + 1:>4} {lw_s:>8} {up_s:>8} {nu_observed[i]:>8.0f} {npr_g[i]:>25} {res2_g[i]:>25} {ok:>6}")
+print("-" * 110)
+print(f"{'Итого':>22} {n:>8.0f} {np.sum(npr_g):>25} {X2_g:>25}")
 print(f"\n   k = {k},  df = {df_g}")
-print(f"   X² = {X2_g:.4f}")
-print(f"   χ²_кр (α={al}, df={df_g}) = {xa1_g:.4f}")
+print(f"   X² = {X2_g}")
+print(f"   χ²_кр (α={al}, df={df_g}) = {xa1_g}")
 print(f"   X² > χ²_кр : {X2_g > xa1_g}  →  {'Отвергаем H0' if X2_g > xa1_g else 'Нет оснований отвергнуть H0'}")
-print(f"   p-value = {pval_g:.4e}")
+print(f"   p-value = {pval_g}")
 
 
 # ── Графики ───────────────────────────────────────────────────────
