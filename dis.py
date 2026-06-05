@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
+
 # Исходные данные (Таблица 1)
 arr = np.array([
     0, 2, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 2, 1, 0, 0, 1, 0, 0, 2,
@@ -22,13 +23,13 @@ b = 1.03
 lam0 = 2.10
 
 # ── a) Вариационный ряд ───────────────────────────────────────────
-print("=" * 55)
+print("=" * 115)
 print("a) ВАРИАЦИОННЫЙ РЯД")
-print("=" * 55)
-print(f"{'x_i':<10} {'n_i':<10} {'w_i':<10} {'F*(x)':<10}")
-print("-" * 44)
+print("=" * 115)
+print(f"{'x_i':<10} {'n_i':<10} {'w_i':<30} {'F*(x)':<30}")
+print("-" * 115)
 for v, c, w, f in zip(vals, counts, rel_freqs, cum_freqs):
-    print(f"{v:<10} {c:<10} {w:<10.4f} {f:<10.4f}")
+    print(f"{v:<10} {c:<10} {w:<30} {f:<30}")
 print(f"\nN = {n}")
 
 # ── b) Числовые характеристики ────────────────────────────────────
@@ -45,12 +46,12 @@ prb = np.sum(rel_freqs[(vals >= a) & (vals <= b)])
 print("\n" + "=" * 55)
 print("b) ЧИСЛОВЫЕ ХАРАКТЕРИСТИКИ")
 print("=" * 55)
-print(f"(i)   Математическое ожидание : {m:.4f}")
-print(f"(ii)  Дисперсия               : {s2:.4f}")
-print(f"(iii) Медиана                 : {med:.4f}")
-print(f"(iv)  Асимметрия              : {asi:.4f}")
-print(f"(v)   Эксцесс                 : {exc:.4f}")
-print(f"(vi)  P(X \u2208 [{a}, {b}])          : {prb:.4f}")
+print(f"(i)   Математическое ожидание : {m}")
+print(f"(ii)  Дисперсия               : {s2}")
+print(f"(iii) Медиана                 : {med}")
+print(f"(iv)  Асимметрия              : {asi}")
+print(f"(v)   Эксцесс                 : {exc}")
+print(f"(vi)  P(X \u2208 [{a}, {b}])          : {prb}")
 
 # ── c) ОМП и ММ для Пуассона ──────────────────────────────────────
 lam_mle = m
@@ -59,8 +60,8 @@ lam_mm = m
 print("\n" + "=" * 55)
 print("c) ОЦЕНКИ ПАРАМЕТРА \u03bb (Пуассон)")
 print("=" * 55)
-print(f"   ОМП: \u03bb_mle = x\u0304 = {lam_mle:.4f},  смещение = 0")
-print(f"   ММ:  \u03bb_mm  = x\u0304 = {lam_mm:.4f},  смещение = 0")
+print(f"   ОМП: \u03bb_mle = x\u0304 = {lam_mle},  смещение = 0")
+print(f"   ММ:  \u03bb_mm  = x\u0304 = {lam_mm},  смещение = 0")
 
 # ── d) Асимптотический ДИ для \u03bb + ДИ для дисперсии ────────────────
 z = stats.norm.ppf(1 - al / 2)
@@ -77,12 +78,12 @@ ci_hi_var = (n - 1) * s2u / x2lo
 print("\n" + "=" * 55)
 print(f"d) ДОВЕРИТЕЛЬНЫЕ ИНТЕРВАЛЫ  (\u03b1 = {al})")
 print("=" * 55)
-print(f"   z_{{\u03b1/2}} = {z:.4f}")
-print(f"   \u03c7\u00b2_{{\u03b1/2}} = {x2lo:.4f},  \u03c7\u00b2_{{1-\u03b1/2}} = {x2hi:.4f}")
-print(f"\n   {'Par':<8} {'Lw':>12} {'Up':>12}")
-print(f"   {'-' * 34}")
-print(f"   {'Mean':<8} {ci_lo_lam:>12.4f} {ci_hi_lam:>12.4f}")
-print(f"   {'Var':<8} {ci_lo_var:>12.4f} {ci_hi_var:>12.4f}")
+print(f"   z_{{\u03b1/2}} = {z}")
+print(f"   \u03c7\u00b2_{{\u03b1/2}} = {x2lo},  \u03c7\u00b2_{{1-\u03b1/2}} = {x2hi}")
+print(f"\n   {'Par':<8} {'Lw':>30} {'Up':>30}")
+print(f"   {'-' * 70}")
+print(f"   {'Mean':<8} {ci_lo_lam:>30} {ci_hi_lam:>30}")
+print(f"   {'Var':<8} {ci_lo_var:>30} {ci_hi_var:>30}")
 
 
 # ── \u03c7\u00b2: Построение таблиц с объединением малочисленных групп ──────
@@ -134,27 +135,27 @@ def print_chi2(lw_l, up_l, nu, npr, res, res2, X2, df, title):
     k = len(nu)
     xa1 = stats.chi2.ppf(1 - al, df)
     pval = stats.chi2.sf(X2, df)
-    print(f"\n{'=' * 72}")
+    print(f"\n{'=' * 160}")
     print(f"  {title}")
-    print(f"{'=' * 72}")
-    print(f"{'i':>4} {'lw':>6} {'up':>6} {'nu_i':>8} {'np_i':>8} "
-          f"{'res':>10} {'res^2':>10} {'np>=5':>6}")
-    print("-" * 72)
+    print(f"{'=' * 160}")
+    print(f"{'i':>4} {'lw':>6} {'up':>6} {'nu_i':>8} {'np_i':>30} "
+          f"{'res':>30} {'res^2':>30} {'np>=5':>6}")
+    print("-" * 160)
     for i in range(k):
         lw_s = f"{int(lw_l[i])}" if not np.isinf(lw_l[i]) else "-\u221e"
         up_s = f"{int(up_l[i])}" if not np.isinf(up_l[i]) else "+\u221e"
         ok = "\u2713" if npr[i] >= 5 else "\u2717"
-        print(f"{i + 1:>4} {lw_s:>6} {up_s:>6} {nu[i]:>8.0f} {npr[i]:>8.3f} "
-              f"{res[i]:>10.4f} {res2[i]:>10.4f} {ok:>6}")
-    print("-" * 72)
-    print(f"{'Итого':>18} {np.sum(nu):>8.0f} {np.sum(npr):>8.3f} "
-          f"{'':>10} {X2:>10.4f}")
+        print(f"{i + 1:>4} {lw_s:>6} {up_s:>6} {nu[i]:>8.0f} {npr[i]:>30} "
+              f"{res[i]:>30} {res2[i]:>30} {ok:>6}")
+    print("-" * 160)
+    print(f"{'Итого':>18} {np.sum(nu):>8.0f} {np.sum(npr):>30} "
+          f"{'':>30} {X2:>30}")
     print(f"\n   k = {k},  df = {df}")
-    print(f"   X\u00b2 = {X2:.4f}")
-    print(f"   \u0447\u00b2_\u043a\u0440 (\u0431={al}, df={df}) = {xa1:.4f}")
+    print(f"   X\u00b2 = {X2}")
+    print(f"   \u0447\u00b2_\u043a\u0440 (\u0431={al}, df={df}) = {xa1}")
     print(f"   X\u00b2 > \u0447\u00b2_\u043a\u0440 : {X2 > xa1}  \u2192  "
           f"{'Отвергаем H0' if X2 > xa1 else 'Нет оснований отвергнуть H0'}")
-    print(f"   p-value = {pval:.4f}")
+    print(f"   p-value = {pval}")
 
 
 # ── e) Простая гипотеза H0: Poisson(\u03bb0 = 2.10) ───────────────────
@@ -167,7 +168,7 @@ print_chi2(lw_e, up_e, nu_e, npr_e, res_e, res2_e, X2_e,
 lw_f, up_f, nu_f, npr_f, res_f, res2_f, X2_f = build_chi2(arr, lam_mle, n)
 print_chi2(lw_f, up_f, nu_f, npr_f, res_f, res2_f, X2_f,
            len(nu_f) - 1 - 1,
-           f"f) \u03c7\u00b2  сложная гипотеза H0: Poisson(\u03bb_mle = {lam_mle:.4f})")
+           f"f) \u03c7\u00b2  сложная гипотеза H0: Poisson(\u03bb_mle = {lam_mle})")
 
 # ── Графики ───────────────────────────────────────────────────────
 bins = np.append(vals - 0.5, vals[-1] + 0.5)
